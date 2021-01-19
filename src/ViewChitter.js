@@ -3,7 +3,17 @@ class ViewChitter {
     this.element = element
   }
 
-  renderHomePage() {
+  renderHomePage(url) {
+    let text =
+      `<a href="${url}#sign_up">Sign up</a>
+      <a href="${url}#sign_in">Sign in</a>
+      <a href="${url}#post_peep">Post peep</a>
+      <a href="${url}#peeps">View peeps</a>
+      `
+    this.element.innerHTML = text
+  }
+
+  renderSignUp() {
     let text =
       `<form id='sign-up' action="index.html" method="post">
       Sign-up
@@ -11,20 +21,13 @@ class ViewChitter {
       <input id="password" type="text" name="password">
       <input type="submit" value="Submit">
       </form>
-      <form id='sign-in' action="index.html" method="post">
-      Sign-in
-      <input type="text" name="username" id='sign-in-handle'>
-      <input type="text" name="password" id='sign-in-password'>
-      <input type="submit" value="Submit">
-      </form>
-      <a href="file:///Users/student/Makers/week8/frontend-api-challenge/src/index.html#peeps">View peeps</a>
       `
     this.element.innerHTML = text
   }
 
-  renderSignUp() {
+  renderSignIn() {
     let text =
-      [`<div>Thanks for signing-up! Please log in</div>`,
+      [`<div>Please log in</div>`,
       `<form id='sign-in' action="index.html" method="post">`,
       `Sign-in`,
       `<input type="text" name="username" id='sign-in-handle'>`,
@@ -34,9 +37,9 @@ class ViewChitter {
     this.element.innerHTML = text.join('')
   }
 
-  renderLogIn() {
+  renderPostPeep() {
     let text =
-      `<div>you have logged in! post a peep, like a peep or delete a peep</div>
+      `<div>post a peep, like a peep or delete a peep</div>
       <form id='post-peep'>
       <input type="text" id ='peep' name="peep">
       <input type="submit" value="Post peep">

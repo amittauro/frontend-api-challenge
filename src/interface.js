@@ -1,48 +1,37 @@
 window.addEventListener('load', (event) => {
   console.log('page is fully loaded');
   event.preventDefault()
+  let url = location.href
   let element = document.getElementById('app')
   let client = new Client
-  let chitter = new Chitter(element, client)
   let viewChitter = new ViewChitter(element)
-  viewChitter.renderHomePage()
+    let chitter = new Chitter(element, client, viewChitter)
+  viewChitter.renderHomePage(url)
   window.addEventListener('hashchange', (event) => {
     event.preventDefault()
     if (location.hash === "#peeps") {
       chitter.peeps()
+    } else if (location.hash === "#sign_up") {
+      viewChitter.renderSignUp()
+      document.getElementById('sign-up').addEventListener('submit', (event) => {
+        event.preventDefault()
+        chitter.createNewUser(event.target[0].value, event.target[1].value)
+      })
+    } else if (location.hash === "#sign_in") {
+      viewChitter.renderSignIn()
+      document.getElementById('sign-in').addEventListener('submit', (event) => {
+        event.preventDefault()
+        chitter.loginUser(event.target[0].value, event.target[1].value)
+      })
+    } else if (location.hash === "#post_peep") {
+      viewChitter.renderPostPeep()
+      document.getElementById('post-peep').addEventListener('submit', (event) => {
+        event.preventDefault()
+        chitter.postPeep(event.target[0].value)
+      });
     } else {
       let peepId = location.hash.slice(1)
       chitter.likePeep(peepId)
     }
   })
-  let signUpForm = document.getElementById('sign-up')
-  signUpForm.addEventListener('submit', (event) => {
-    event.preventDefault()
-    chitter.createNewUser(event.target[0].value, event.target[1].value)
-    viewChitter.renderSignUp()
-    let signInForm = document.getElementById('sign-in')
-    signInForm.addEventListener('submit', (event) => {
-      event.preventDefault()
-      chitter.loginUser(event.target[0].value, event.target[1].value)
-      viewChitter.renderLogIn()
-      let postPeepForm = document.getElementById('post-peep')
-      postPeepForm.addEventListener('submit', (event) => {
-        event.preventDefault()
-        chitter.postPeep(event.target[0].value)
-        viewChitter.renderPost()
-      });
-    });
-  })
-  let signInForm = document.getElementById('sign-in')
-  signInForm.addEventListener('submit', (event) => {
-    event.preventDefault()
-    chitter.loginUser(event.target[0].value, event.target[1].value)
-    chitter.renderLogIn()
-    let postPeepForm = document.getElementById('post-peep')
-    postPeepForm.addEventListener('submit', (event) => {
-      event.preventDefault()
-      chitter.postPeep(event.target[0].value)
-      chitter.renderPost()
-    });
-  });
 });

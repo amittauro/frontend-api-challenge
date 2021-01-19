@@ -1,8 +1,9 @@
 class Chitter {
 
-  constructor(element, client) {
+  constructor(element, client, viewChitter) {
     this.element = element
     this.client = client
+    this.viewChitter = viewChitter
     this.userId
     this.sessionKey
     this.data
@@ -27,6 +28,19 @@ class Chitter {
 
   createNewUser(handle, password) {
     this.client.post("https://chitter-backend-api-v2.herokuapp.com/users", `{"user": {"handle":"${handle}", "password":"${password}"}}`)
+    .then((data) => {
+      window.alert("Thanks for signing up, please log in")
+      let length = location.hash.length
+      let url = location.href.slice(0, -length)
+      this.viewChitter.renderHomePage(url)
+    })
+    .catch(error => {
+      window.alert("invalid sign up details");
+      let length = location.hash.length
+      let url = location.href.slice(0, -length)
+      let text = `<a href="${url}#sign_up">Sign up</a>`
+      this.element.innerHTML = text
+    });
   }
 
   loginUser(handle, password) {
@@ -34,7 +48,18 @@ class Chitter {
       .then((data) => {
         this.userId = data.user_id
         this.sessionKey = data.session_key
+        window.alert("Thanks for logging in, please post a peep")
+        let length = location.hash.length
+        let url = location.href.slice(0, -length)
+        this.viewChitter.renderHomePage(url)
       })
+      .catch(error => {
+        window.alert("try signing up");
+        let length = location.hash.length
+        let url = location.href.slice(0, -length)
+        let text = `<a href="${url}#sign_up">Sign up</a>`
+        this.element.innerHTML = text
+      });
   }
 
   getSinglePeep(id) {
@@ -45,7 +70,21 @@ class Chitter {
     this.client.postPeep("https://chitter-backend-api-v2.herokuapp.com/peeps", this.sessionKey, this.userId, body)
     .then((response) => {
       console.log(response)
+      window.alert(`Thanks for posting: ${response.body}`)
+      let length = location.hash.length
+      let url = location.href.slice(0, -length)
+      this.viewChitter.renderHomePage(url)
     })
+    .catch(error => {
+      window.alert("try signing up/ logging in");
+      let length = location.hash.length
+      let url = location.href.slice(0, -length)
+      let text =
+      `<a href="${url}#sign_up">Sign up</a>
+      <a href="${url}#sign_in">Sign in</a>
+      `
+      this.element.innerHTML = text
+    });
   }
 
   deletePeep(id) {

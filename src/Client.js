@@ -8,7 +8,6 @@ class Client {
   }
 
   post(url, body) {
-    debugger;
     return fetch(url, {
       method: 'POST',
       headers: {
