@@ -1,12 +1,10 @@
 window.addEventListener('load', (event) => {
-  console.log('page is fully loaded');
   event.preventDefault()
-  let url = location.href
   let element = document.getElementById('app')
   let client = new Client
   let viewChitter = new ViewChitter(element)
-    let chitter = new Chitter(element, client, viewChitter)
-  viewChitter.renderHomePage(url)
+  let chitter = new Chitter(client, viewChitter)
+  viewChitter.renderHomePage()
   window.addEventListener('hashchange', (event) => {
     event.preventDefault()
     if (location.hash === "#peeps") {

@@ -3,7 +3,13 @@ class ViewChitter {
     this.element = element
   }
 
-  renderHomePage(url) {
+  renderHomePage() {
+    let url
+    if (location.hash.length > 0) {
+      url = location.href.slice(0, -location.hash.length)
+    } else {
+      url = location.href
+    }
     let text =
       `<a href="${url}#sign_up">Sign up</a>
       <a href="${url}#sign_in">Sign in</a>
@@ -47,20 +53,21 @@ class ViewChitter {
     this.element.innerHTML = text
   }
 
-  renderPost() {
-    let text = `
-    <div>Thanks for posting a peep! You can click on the link below to view the last 50 peeps</div>
-    <a href="file:///Users/student/Makers/week8/frontend-api-challenge/src/index.html#peeps">View peeps</a>
-    `
+  renderSignUpError() {
+    let length = location.hash.length
+    let url = location.href.slice(0, -length)
+    let text = `<a href="${url}#sign_up">Sign up</a>`
     this.element.innerHTML = text
   }
 
-  render(data) {
+  renderPeeps(data) {
+    let length = location.hash.length
+    let url = location.href.slice(0, -length)
     let text = [`<ul>`]
     let peeps = data.forEach(peep => text.push(
       `
       <li id="${peep.id}">${peep.body}
-      <a href="file:///Users/student/Makers/week8/frontend-api-challenge/src/index.html#${peep.id}">
+      <a href="${url}#${peep.id}">
       Like peep</a>
       </li>
       `

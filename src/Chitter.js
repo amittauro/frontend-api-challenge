@@ -1,7 +1,6 @@
 class Chitter {
 
-  constructor(element, client, viewChitter) {
-    this.element = element
+  constructor(client, viewChitter) {
     this.client = client
     this.viewChitter = viewChitter
     this.userId
@@ -12,17 +11,7 @@ class Chitter {
   peeps() {
     return this.client.get("https://chitter-backend-api-v2.herokuapp.com/peeps")
       .then((data) => {
-        let text = [`<ul>`]
-        let peeps = data.forEach(peep => text.push(
-          `
-          <li id="${peep.id}">${peep.body}
-          <a href="file:///Users/student/Makers/week8/frontend-api-challenge/src/index.html#${peep.id}">
-          Like peep</a>
-          </li>
-          `
-        ))
-        text.push(`</ul>`)
-        this.element.innerHTML = text.join('')
+        this.viewChitter.renderPeeps(data)
       })
   }
 
@@ -30,16 +19,11 @@ class Chitter {
     this.client.post("https://chitter-backend-api-v2.herokuapp.com/users", `{"user": {"handle":"${handle}", "password":"${password}"}}`)
     .then((data) => {
       window.alert("Thanks for signing up, please log in")
-      let length = location.hash.length
-      let url = location.href.slice(0, -length)
-      this.viewChitter.renderHomePage(url)
+      this.viewChitter.renderHomePage()
     })
     .catch(error => {
       window.alert("invalid sign up details");
-      let length = location.hash.length
-      let url = location.href.slice(0, -length)
-      let text = `<a href="${url}#sign_up">Sign up</a>`
-      this.element.innerHTML = text
+      this.viewChitter.renderSignUpError()
     });
   }
 
@@ -49,16 +33,11 @@ class Chitter {
         this.userId = data.user_id
         this.sessionKey = data.session_key
         window.alert("Thanks for logging in, please post a peep")
-        let length = location.hash.length
-        let url = location.href.slice(0, -length)
-        this.viewChitter.renderHomePage(url)
+        this.viewChitter.renderHomePage()
       })
       .catch(error => {
-        window.alert("try signing up");
-        let length = location.hash.length
-        let url = location.href.slice(0, -length)
-        let text = `<a href="${url}#sign_up">Sign up</a>`
-        this.element.innerHTML = text
+        window.alert("invalid details try signing up or logging in");
+        this.viewChitter.renderHomePage()
       });
   }
 
@@ -71,19 +50,11 @@ class Chitter {
     .then((response) => {
       console.log(response)
       window.alert(`Thanks for posting: ${response.body}`)
-      let length = location.hash.length
-      let url = location.href.slice(0, -length)
-      this.viewChitter.renderHomePage(url)
+      this.viewChitter.renderHomePage()
     })
     .catch(error => {
-      window.alert("try signing up/ logging in");
-      let length = location.hash.length
-      let url = location.href.slice(0, -length)
-      let text =
-      `<a href="${url}#sign_up">Sign up</a>
-      <a href="${url}#sign_in">Sign in</a>
-      `
-      this.element.innerHTML = text
+      window.alert("have you signed up/ logged in?");
+      this.viewChitter.renderHomePage()
     });
   }
 
