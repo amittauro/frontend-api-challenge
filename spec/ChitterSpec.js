@@ -5,38 +5,29 @@ describe('Chitter', () => {
 
   beforeEach(() => {
     mockClient = { get: () => Promise.resolve(mockPeeps),
-    post: () => {},
+    post: () => Promise.resolve(data),
     postPeep: () => {},
     authorizedRequest: () => {} }
-    mockElement = {}
-    chitter = new Chitter(mockElement, mockClient)
+    const mockSuccessResponse = {};
+    const mockJsonPromise = Promise.resolve(mockSuccessResponse); // 2
+    const mockFetchPromise = Promise.resolve({ // 3
+      json: () => mockJsonPromise,
+    });
+    chitter = new Chitter(mockClient)
   })
 
-  it('can render all the peeps', async() => {
-    await chitter.showAllPeeps()
-    expect(mockElement.innerHTML).toEqual("my first peep :)")
+  it('can get peeps', () => {
+    spyOn(mockClient, 'get')
+    chitter.peeps()
+    expect(mockClient.get).toHaveBeenCalledWith("https://chitter-backend-api-v2.herokuapp.com/peeps")
   })
 
   it('can create a new user', () => {
-    spyOn(mockClient, 'post').and.returnValue({
-      "user_id": 1,
-      "session_key": "a_valid_session_key"
-    })
+    spyOn(mockClient, 'post').and.returnValue(new Promise(() => {}))
     chitter.createNewUser('kay', 'mypassword')
     expect(mockClient.post).toHaveBeenCalledWith("https://chitter-backend-api-v2.herokuapp.com/users",
     '{"user": {"handle":"kay", "password":"mypassword"}}')
   })
-
-  // it('can create a new user', () => {
-  //   spyOn(mockClient, 'post').and.returnValue({
-  //     "user_id": 1,
-  //     "session_key": "a_valid_session_key"
-  //   })
-  //   expect(chitter.createNewUser('kay', 'mypassword')).toEqual({
-  //     "user_id": 1,
-  //     "session_key": "a_valid_session_key"
-  //   })
-  // })
 
   it('can login a user', () => {
     spyOn(mockClient, 'post')
@@ -75,5 +66,4 @@ describe('Chitter', () => {
     expect(mockClient.authorizedRequest).toHaveBeenCalledWith(`https://chitter-backend-api-v2.herokuapp.com/peeps/2/likes/${chitter.userId}`, chitter.sessionKey, 'DELETE')
   })
 
-  // it returns the body of the peep as a html?
 })

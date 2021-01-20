@@ -53,17 +53,10 @@ class ViewChitter {
     this.element.innerHTML = text
   }
 
-  renderSignUpError() {
-    let length = location.hash.length
-    let url = location.href.slice(0, -length)
-    let text = `<a href="${url}#sign_up">Sign up</a>`
-    this.element.innerHTML = text
-  }
-
   renderPeeps(data) {
     let length = location.hash.length
     let url = location.href.slice(0, -length)
-    let text = [`<ul>`]
+    let text = [`<a href="${url}#home">Home</a>`, `<ul>`]
     let peeps = data.forEach(peep => text.push(
       `
       <li id="${peep.id}">${peep.body}
